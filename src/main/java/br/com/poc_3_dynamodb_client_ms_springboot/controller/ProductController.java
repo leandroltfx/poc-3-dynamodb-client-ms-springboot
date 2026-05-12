@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("products")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -22,9 +22,16 @@ public class ProductController {
         productService.save(productDTO);
     }
 
-    @GetMapping
-    public List<ProductResponseDTO> getProduct() {
-        return productService.getAll();
+    @GetMapping("query")
+    public List<ProductResponseDTO> getProductsByCategory(
+            @RequestParam("category") String category
+    ) {
+        return productService.findAllByCategory(category);
+    }
+
+    @GetMapping("scan")
+    public List<ProductResponseDTO> scanProducts() {
+        return productService.scanProducts();
     }
 
 }

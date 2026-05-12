@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: poc-3-dynamodb-client-ms-springboot

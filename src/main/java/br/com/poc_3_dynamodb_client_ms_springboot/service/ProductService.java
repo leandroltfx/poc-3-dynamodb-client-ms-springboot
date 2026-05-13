@@ -1,6 +1,6 @@
 package br.com.poc_3_dynamodb_client_ms_springboot.service;
 
-import br.com.poc_3_dynamodb_client_ms_springboot.dto.ProductDTO;
+import br.com.poc_3_dynamodb_client_ms_springboot.dto.ProductRequestDTO;
 import br.com.poc_3_dynamodb_client_ms_springboot.dto.ProductResponseDTO;
 import br.com.poc_3_dynamodb_client_ms_springboot.entity.ProductEntity;
 import org.springframework.stereotype.Service;
@@ -33,14 +33,14 @@ public class ProductService {
         );
     }
 
-    public void save(ProductDTO productDTO) {
+    public void save(ProductRequestDTO productRequestDTO) {
 
         ProductEntity productEntity = new ProductEntity();
 
         productEntity.setId(UUID.randomUUID().toString());
-        productEntity.setCategory(productDTO.category());
-        productEntity.setName(productDTO.name());
-        productEntity.setPrice(productDTO.price());
+        productEntity.setCategory(productRequestDTO.category());
+        productEntity.setName(productRequestDTO.name());
+        productEntity.setPrice(productRequestDTO.price());
 
         table.putItem(productEntity);
     }

@@ -1,6 +1,6 @@
 package br.com.poc_3_dynamodb_client_ms_springboot.controller;
 
-import br.com.poc_3_dynamodb_client_ms_springboot.dto.ProductDTO;
+import br.com.poc_3_dynamodb_client_ms_springboot.dto.ProductRequestDTO;
 import br.com.poc_3_dynamodb_client_ms_springboot.dto.ProductResponseDTO;
 import br.com.poc_3_dynamodb_client_ms_springboot.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,9 @@ public class ProductController {
 
     @PostMapping
     public void createProduct(
-            @RequestBody ProductDTO productDTO
+            @RequestBody ProductRequestDTO productRequestDTO
     ) {
-        productService.save(productDTO);
+        productService.save(productRequestDTO);
     }
 
     @GetMapping("query")

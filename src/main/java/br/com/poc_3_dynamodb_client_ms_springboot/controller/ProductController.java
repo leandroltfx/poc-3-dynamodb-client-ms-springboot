@@ -49,4 +49,17 @@ public class ProductController {
         );
     }
 
+    @GetMapping("query-in-table")
+    public List<ProductResponseDTO> getProductsByCategoryAndPriceInTable(
+            @RequestParam("category") String category,
+            @RequestParam("price") BigDecimal price,
+            @RequestParam("condition") PriceOperatorEnum priceOperatorEnum
+    ) {
+        return productService.findInBaseTableByCategoryAndPrice(
+                category,
+                price,
+                priceOperatorEnum
+        );
+    }
+
 }

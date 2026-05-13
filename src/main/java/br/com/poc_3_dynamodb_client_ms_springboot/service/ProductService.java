@@ -7,7 +7,9 @@ import br.com.poc_3_dynamodb_client_ms_springboot.model.PriceOperatorEnum;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -128,5 +130,67 @@ public class ProductService {
                 });
 
         return productResponseDTOS;
+    }
+
+    public List<ProductResponseDTO> findInBaseTableByCategoryAndPrice(
+            String category,
+            BigDecimal price,
+            PriceOperatorEnum operator
+    ) {
+
+        List<ProductResponseDTO> products = new ArrayList<>();
+
+        QueryConditional condition =
+                QueryConditional.keyEqualTo(
+                        Key.builder()
+                                .partitionValue(category)
+                                .build()
+                );
+
+        String expression;
+
+        switch (operator) {
+            case EQ -> expression = "price = :price";
+            case LT -> expression = "price < :price";
+            case LTE -> expression = "price <= :price";
+            case GT -> expression = "price > :price";
+            case GTE -> expression = "price >= :price";
+            default -> throw new IllegalArgumentException("Operador inválido");
+        }
+
+        Expression filterExpression = Expression.builder()
+                .expression(expression)
+                .putExpressionValue(
+                        ":price",
+                        AttributeValue.builder()
+                                .n(price.toString())
+                                .build()
+                )
+                .build();
+
+        QueryEnhancedRequest request =
+                QueryEnhancedRequest.builder()
+                        .queryConditional(condition)
+                        .filterExpression(filterExpression)
+                        .build();
+
+        table.query(request)
+                .stream()
+                .flatMap(page -> page.items().stream())
+                .forEach(product -> {
+
+                    ProductResponseDTO dto =
+                            new ProductResponseDTO(
+                                    product.getCategory(),
+                                    product.getId(),
+                                    product.getName(),
+                                    product.getPrice()
+                            );
+
+                    products.add(dto);
+                });
+
+        return products;
+
     }
 }

@@ -1,9 +1,7 @@
 package br.com.poc_3_dynamodb_client_ms_springboot.entity;
 
 import lombok.Data;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.math.BigDecimal;
 
@@ -17,6 +15,7 @@ public class ProductEntity {
     private BigDecimal price;
 
     @DynamoDbPartitionKey
+    @DynamoDbSecondaryPartitionKey(indexNames = "products-price-index")
     public String getCategory() {
         return category;
     }
@@ -24,6 +23,11 @@ public class ProductEntity {
     @DynamoDbSortKey
     public String getId() {
         return id;
+    }
+
+    @DynamoDbSecondarySortKey(indexNames = "products-price-index")
+    public BigDecimal getPrice() {
+        return price;
     }
 
 }
